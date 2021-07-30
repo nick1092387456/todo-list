@@ -1,14 +1,11 @@
-//載入 express 並建構應用程式伺服器
-const express = require('express')
-const app = express()
-//載入 資料庫
 const mongoose = require('mongoose')
+const Todo = require('../todo') //載入todo model
 
 //與資料庫連線，尋找指定資料庫路徑
 mongoose.connect('mongodb://localhost/todo-list', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}) 
+})
 const db = mongoose.connection //取得連線狀態
 
 //設定狀態回覆訊息
@@ -20,14 +17,8 @@ db.on('error', () => {
 //連線成功
 db.once('open', () => {
   console.log('mongodb connected!')
-})
-
-//設定網頁路由
-app.get('/', (req, res) => {
-  res.send('hello world')
-})
-
-//設定port
-app.listen(3000, () => {
-  console.log('App is running on http://localhost:3000')
+  for (let i = 0; i < 10; i++) {
+    Todo.create({ name: 'name-' + i })
+  }
+  console.log('done')
 })
