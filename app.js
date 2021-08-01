@@ -1,6 +1,12 @@
 //載入 express 並建構應用程式伺服器
 const express = require('express')
 const app = express()
+const exphbs = require('express-handlebars')
+
+//設定樣板引擎
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.set('view engine', 'hbs')
+
 //載入 資料庫
 const mongoose = require('mongoose')
 
@@ -8,7 +14,7 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/todo-list', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}) 
+})
 const db = mongoose.connection //取得連線狀態
 
 //設定狀態回覆訊息
@@ -24,7 +30,7 @@ db.once('open', () => {
 
 //設定網頁路由
 app.get('/', (req, res) => {
-  res.send('hello world')
+  res.render('index')
 })
 
 //設定port
