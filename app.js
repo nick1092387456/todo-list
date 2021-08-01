@@ -3,6 +3,9 @@ const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.urlencoded({ extended: true }))
 
 //設定樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
@@ -33,8 +36,19 @@ db.once('open', () => {
 app.get('/', (req, res) => {
   Todo.find() //取出 Todo model 裡的所有資料
     .lean() //把 Mongoose 的 Model 物件轉換成乾淨的 Javascript 資料陣列
-    .then((todo) => res.render('index', { todo })) //將資料傳給index樣板
+    .then((todos) => res.render('index', { todos })) //將資料傳給index樣板
     .catch((error) => console.log(error)) //錯誤處理
+})
+
+app.get('/todos/new', (req, res) => {
+  return res.render('new')
+})
+
+app.post('/todos', (req, res) => {
+  const name = req.body.name
+  return Todo.create({ name })
+    .then(() => res.redirect('/'))
+    .catch((error) => console.log(error))
 })
 
 //設定port
