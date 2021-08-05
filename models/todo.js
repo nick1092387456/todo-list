@@ -5,5 +5,9 @@ const todoSchema = new Schema({
     type: String,
     require: true,
   },
+  isDone: {
+    type: Boolean,
+    default: false, //預設為未打勾的意思
+  },
 })
 module.exports = mongoose.model('Todo', todoSchema)
