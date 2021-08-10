@@ -6,6 +6,7 @@ const Todo = require('./models/todo')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const routes = require('./routes')
+const PORT = process.env.PORT || 3000
 require('./config/mongoose')
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -17,6 +18,6 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 //設定port
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log('App is running on http://localhost:3000')
 })
