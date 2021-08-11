@@ -19,5 +19,5 @@ app.set('view engine', 'hbs')
 
 //設定port
 app.listen(PORT, () => {
-  console.log('App is running on http://localhost:3000')
+  console.log(`App is running on http://localhost:${PORT}`)
 })
