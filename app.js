@@ -1,6 +1,7 @@
 //載入 express 並建構應用程式伺服器
 const express = require('express')
 const app = express()
+const session = require('express-session')
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
 const bodyParser = require('body-parser')
@@ -12,6 +13,13 @@ require('./config/mongoose')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(routes)
+app.use(
+  session({
+    secret: 'ThisIsMySecret',
+    resave: 'false',
+    saveUnInitialized: true,
+  })
+)
 
 //設定樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
