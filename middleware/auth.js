@@ -4,5 +4,7 @@ module.exports = {
       return next()
     }
     res.redirect('/users/login')
-   },
+    console.log('let me in!')
+    console.log(req.isAuthenticated())
+  },
 }
