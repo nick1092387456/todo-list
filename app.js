@@ -10,9 +10,14 @@ const Todo = require('./models/todo')
 const usePassport = require('./config/passport')
 require('./config/mongoose')
 const flash = require('connect-flash')
+//新增判斷:若NODE_ENV不在production狀態(正式上線模式)就引入我們設定的環境變數
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
+console.log(process.env.PORT)
 
 //設定樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
@@ -20,7 +25,7 @@ app.set('view engine', 'hbs')
 
 app.use(
   session({
-    secret: 'ThisIsMySecret',
+    secret: process.env.SESSION_SECRET,
     resave: 'false',
     saveUnInitialized: true,
   })

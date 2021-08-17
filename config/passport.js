@@ -2,6 +2,7 @@
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const LocalStrategy = require('passport-local').Strategy
+const FacebookStrategy = require('passport-facebook').Strategy //引用facebook登入策略
 const User = require('../models/user')
 
 module.exports = (app) => {
@@ -33,7 +34,42 @@ module.exports = (app) => {
         .catch((err) => done(err, false))
     })
   )
-  //// 設定序列化與反序列化
+
+  //引用FB登入策略
+  passport.use(
+    new FacebookStrategy(
+      {
+        clientID: process.env.FACEBOOK_ID,
+        clientSecret: process.env.FACEBOOK_SECRET,
+        callbackURL: process.env.FACEBOOK_CALLBACK,
+        profileFields: ['email', 'displayName'], //要從FB取得授權的資料
+      },
+
+      (accessToken, refreshToken, profile, done) => {
+        const { name, email } = profile._json //使用解構附值取得_json裡的資料
+        User.findOne({ email }).then((user) => {
+          //利用email查詢是否已註冊
+          if (user) return done(null, user)
+          const randomPassword = Math.random().toString(36).slice(-8)
+          //若沒有註冊過則亂數產生一個密碼for FB登入使用者
+          bcrypt
+            .genSalt(10)
+            .then((salt) => bcrypt.hash(randomPassword, salt))
+            .then((hash) =>
+              User.create({
+                name,
+                email,
+                password: hash,
+              })
+            )
+            .then((user) => done(null, user))
+            .catch((err) => done(err, false))
+        })
+      }
+    )
+  )
+
+  // 設定序列化與反序列化
   passport.serializeUser((user, done) => {
     console.log(user)
     done(null, user.id)
