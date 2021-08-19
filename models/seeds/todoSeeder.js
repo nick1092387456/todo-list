@@ -19,7 +19,6 @@ db.once('open', () => {
     .genSalt(10)
     .then((salt) => bcrypt.hash(SEED_USER.password, salt))
     .then((hash) =>
-
       User.create({
         name: SEED_USER.name,
         email: SEED_USER.email,
@@ -28,9 +27,11 @@ db.once('open', () => {
     )
     .then((user) => {
       const userId = user._id
-      for (let i = 0; i < 10; i++) {
-        Todo.create({ name: `name-${i}`, userId })
-      }
+      return Promise.all(
+        Array.from({ length: 10 }, (_, i) =>
+          Todo.create({ name: `name-${i}`, userId })
+        )
+      )
     })
     .then(() => {
       console.log('done.')
