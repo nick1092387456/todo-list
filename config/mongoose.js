@@ -1,8 +1,9 @@
 //載入 資料庫
 const mongoose = require('mongoose')
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/todo-list'
+const MONGODB_URI = process.env.MONGODB_URI 
 console.log(process.env.MONGODB_URI)
-require('dotenv').config({ debug: true })
+
+
 
 //與資料庫連線，尋找指定資料庫路徑
 mongoose.connect(MONGODB_URI, {

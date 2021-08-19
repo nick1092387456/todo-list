@@ -8,13 +8,13 @@ const methodOverride = require('method-override')
 const routes = require('./routes')
 const Todo = require('./models/todo')
 const usePassport = require('./config/passport')
-require('./config/mongoose')
+
 const flash = require('connect-flash')
 //新增判斷:若NODE_ENV不在production狀態(正式上線模式)就引入我們設定的環境變數
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-
+require('./config/mongoose')
 const app = express()
 const PORT = process.env.PORT
 console.log(process.env.PORT)
